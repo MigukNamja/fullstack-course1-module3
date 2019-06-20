@@ -8,6 +8,6 @@ class Recipe
   format :json
 
   def self.for keyword
-    get("", query: { query: keyword})["recipes"]
+    get("", query: {q: keyword})["recipes"]
   end
 end
