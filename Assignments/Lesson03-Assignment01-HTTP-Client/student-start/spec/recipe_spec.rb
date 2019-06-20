@@ -23,15 +23,23 @@ describe Recipe do
   end
 
   # It should have "base_uri" set properly
-  its(:base_uri) { is_expected.to include "http://food2fork.com/api" }
+  its(:base_uri) { is_expected.to include "https://food2fork.com/api/search" }
 
   # Specific search for "chocolate"
   context "Chocolate Search" do
     before :each do
       query = Recipe.default_params.merge({"q" => "chocolate"})
-      stub_request(:get, Recipe.base_uri + "/search").
-         with(query: query).
-         to_return(body: File.read('chocolate_recipes.json'), status: 200, headers: {'Content-Type' => 'application/json'})
+      stub_request(:get, "https://food2fork.com/api/search?key=2e485d18e860821862f4b4a909648504&query=chocolate").
+      with(
+        headers: {
+       'Accept'=>'*/*',
+       'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+       'User-Agent'=>'Ruby'
+        }).
+      # to_return(status: 200, body: "", headers: {})      
+      # stub_request(:get, Recipe.base_uri + "/search").
+      #    with(query: query).
+          to_return(status: 200, body: File.read('chocolate_recipes.json'), headers: {'Content-Type' => 'application/json'})
     end
 
     subject{ Recipe.for("chocolate") }
